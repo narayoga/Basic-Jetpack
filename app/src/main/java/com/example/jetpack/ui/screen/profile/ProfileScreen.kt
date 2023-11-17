@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +37,7 @@ fun ProfileScreen(
                 painter = painterResource(R.drawable.profile_no_background), // Replace with your actual resource ID
                 contentDescription = null,
                 modifier = Modifier
-                    .size(120.dp)
+                    .size(160.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.secondaryContainer)
             )
@@ -62,9 +63,12 @@ fun ProfileScreen(
 
             // About
             Text(
-                text = "About yourself or any additional information",
+                text = "Life is 10% what happens to us and 90% how we react to it",
                 style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .padding(5.dp)
+                    .padding(top = 5.dp, bottom = 5.dp)
             )
         }
     }

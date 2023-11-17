@@ -7,14 +7,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,7 +40,6 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     navigateToDetail: (Long) -> Unit,
 ) {
-//    println("I'm in home screen")
     HomeContentWithoutViewModel(
         listData = FakeDataSource.dummyStories,
         modifier = modifier,
@@ -49,22 +53,18 @@ fun HomeContentWithoutViewModel(
     modifier: Modifier = Modifier,
     navigateToDetail: (Long) -> Unit,
 ) {
-//    println("I'm in the content listData:${listData}")
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(160.dp),
+    LazyColumn(
+        modifier = modifier,
         contentPadding = PaddingValues(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = modifier
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(listData) { data ->
             StoriesItem(
                 image = data.image,
                 title = data.title,
-                requiredPoint = data.requiredPoint,
+                location = data.coordinate,
                 modifier = Modifier.clickable {
                     navigateToDetail(data.id)
-                    println(data.id)
                 }
             )
         }
@@ -75,15 +75,15 @@ fun HomeContentWithoutViewModel(
 fun StoriesItem(
     image: Int,
     title: String,
-    requiredPoint: Int,
+    location: String,
     modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Gray)
+            .background(Color.DarkGray)
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxSize()
@@ -95,33 +95,35 @@ fun StoriesItem(
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .height(100.dp)
-                    .fillMaxWidth()
+                    .size(100.dp)  // Adjust the size as needed
                     .clip(shape = RoundedCornerShape(4.dp))
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.width(16.dp))
 
-            // Display the title
-            Text(
-                text = title,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
+            // Display the title and requiredPoint on the right side
+            Column {
+                // Display the title
+                Text(
+                    text = title,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
                 )
-            )
 
-            Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
-            // Display the requiredPoint
-            Text(
-                text = "Required Point: $requiredPoint",
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    color = Color.White
+                // Display the requiredPoint
+                Text(
+                    text = "Coordinate: $location",
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        color = Color.White
+                    )
                 )
-            )
+            }
         }
     }
 }

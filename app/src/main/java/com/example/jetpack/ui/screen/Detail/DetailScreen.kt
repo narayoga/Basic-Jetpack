@@ -24,7 +24,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -39,48 +43,20 @@ import com.example.jetpack.R
 import com.example.jetpack.model.FakeDataSource
 import com.example.jetpack.ui.theme.JetpackTheme
 
-data class Reward(
-    val image: Int,
-    val title: String,
-    val requiredPoint: Int
-)
-
-//@Composable
-//fun DetailScreen(
-//    storyId: Long,
-//    navigateBack: () -> Unit,
-//) {
-//    val reward = Reward(
-//        image = R.drawable.reward_4,
-//        title = "Jaket Hoodie Dicoding",
-//        requiredPoint = 7500
-//    )
-//
-//    DetailContent(
-//        image = reward.image,
-//        title = reward.title,
-//        basePoint = reward.requiredPoint,
-//        onBackClick = navigateBack,
-//        modifier = Modifier.fillMaxSize()
-//    )
-//}
-
 @Composable
 fun DetailScreen(
     storyId: Long,
     navigateBack: () -> Unit,
 ) {
-//    val navBackStackEntry by navController.currentBackStackEntryAsState()
-//    val arguments = navBackStackEntry?.arguments
-//    val storyId = arguments?.getLong("storyId") ?: -1L
 
-    val reward = FakeDataSource.dummyStories.find { it.id == storyId }
+    val items = FakeDataSource.dummyStories.find { it.id == storyId }
 
-    if (reward != null) {
+    if (items != null) {
         DetailContent(
-            image = reward.image,
-            title = reward.title,
-            basePoint = reward.requiredPoint,
+            image = items.image,
+            title = items.title,
+            coordinate = items.coordinate,
+            desc = items.description,
             onBackClick = navigateBack,
             modifier = Modifier.fillMaxSize()
         )
@@ -93,7 +69,8 @@ fun DetailScreen(
 fun DetailContent(
     @DrawableRes image: Int,
     title: String,
-    basePoint: Int,
+    coordinate: String,
+    desc: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ){
@@ -132,18 +109,34 @@ fun DetailContent(
                         fontWeight = FontWeight.ExtraBold
                     ),
                 )
+                Box(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .drawBehind {
+                            drawRect(
+                                color = Color.Transparent,
+                                size = Size(size.width, size.height),
+                                style = Stroke(width = 1.dp.toPx()),
+                            )
+                        }
+                ) {
+                    Text(
+                        text = desc,
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Justify,
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .padding(top = 5.dp, bottom = 5.dp)
+                    )
+                }
                 Text(
-                    text = stringResource(R.string.app_name, basePoint),
+                    text = "coordinate: ${coordinate}",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.ExtraBold
                     ),
-                    color = MaterialTheme.colorScheme.secondary
+                    color = MaterialTheme.colorScheme.primary
                 )
-                Text(
-                    text = stringResource(R.string.lorem_ipsum),
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Justify,
-                )
+
             }
         }
         Spacer(modifier = Modifier
@@ -156,14 +149,5 @@ fun DetailContent(
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun DetailContentPreview() {
-//    JetpackTheme {
-//        DetailScreen(
-//
-//        )
-//    }
-//}
 
 
